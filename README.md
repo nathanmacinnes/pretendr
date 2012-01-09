@@ -78,3 +78,6 @@ Known issues/To-do
 circular references in your objects until this is fixed.
 * A class mocking interface would be nice. There're a few issues to work out
 before that can happen though.
+* Prototype properties aren't mocked, and won't be inherited into the mocked
+object's prototype chain (except in the case of arrays, functions and object
+literals).
