@@ -78,3 +78,7 @@ Known issues/To-do
 circular references in your objects until this is fixed.
 * A class mocking interface would be nice. There're a few issues to work out
 before that can happen though.
+* I've just implemented including properties in the prototype chain in the
+mocks. You can do this by passing `true` as the second argument to `MOCKERY`.
+There is huge potential for bugs in this though, because the implementation is
+very basic, so it needs to be made more robust.

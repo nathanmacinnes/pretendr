@@ -143,4 +143,22 @@
         equal(mock.aProperty.original, arr.aProperty);
     });
 
+    module("Prototypes", {
+        setup : function () {
+            var ConstructorFn;
+            ConstructorFn = function () {
+            };
+            ConstructorFn.prototype.protoFn = function () {
+            };
+            this.obj = new ConstructorFn();
+            this.mock = MOCKERY(this.obj, true);
+        }
+    });
+
+    test("can include the prototype-chain properties when mocking", function () {
+        equal(typeof this.mock.protoFn, 'function');
+        this.mock.protoFn(1, 2);
+        deepEqual(this.mock.protoFn.calls[0], [1, 2]);
+    });
+
 }());

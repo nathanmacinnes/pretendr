@@ -1,12 +1,12 @@
 /*jslint maxlen: 80, indent: 4 */
 
-var MOCKERY = function (obj) {
+var MOCKERY = function (obj, proto) {
     "use strict";
     var i,
         mockAFunction,
         mockObj = {},
         returnValue,
-        type = typeof obj;
+        type = typeof obj;        
 
     // Give functions the required return value setting and expectations
     mockAFunction = function (original) {
@@ -57,7 +57,7 @@ var MOCKERY = function (obj) {
 
         // mock all the properties of objects, functions and arrays
         for (i in obj) {
-            if (obj.hasOwnProperty(i)) {
+            if (obj.hasOwnProperty(i) || proto) {
                 mockObj[i] = MOCKERY(obj[i]);
             }
         }
