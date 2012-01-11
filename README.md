@@ -14,14 +14,16 @@ var myObj = {
 var myMock = MOCKERY(myObj);
 ````
 
-Now `myMock.aFunction()` doesn't do stuff. If you wanted, you could make
-`myObj = myMock` so that your scripts will use it straight away under testing.
+Now `myMock.aFunction()` doesn't do stuff.
+
+MOCKERY works by creating a _deep copy_ of your object, swapping the
+functions for new ones which are embellished with helpful mocking features.
 
 Return values
 -------------
-To set a return value, `myMock.aFunction.setReturnValue('a string');`. Now
+To set a return value, use `myMock.aFunction.setReturnValue('a string');`. Now
 calling `myMock.aFunction()` returns `'a string'`. You can also pass multiple
-values:
+values, and the function will loop through them:
 
 ````javascript
 myMock.aFunction.setReturnValue('one', 'two', 'three');
@@ -30,8 +32,6 @@ myMock.aFunction(); // 'one'
 myMock.aFunction(); // 'two'
 myMock.aFunction(); // 'three'
 myMock.aFunction(); // 'one'
-myMock.aFunction(); // 'two'
-myMock.aFunction(); // 'three'
 ````
 
 Or use a function to set the return value:
@@ -46,7 +46,7 @@ myMock.aFunction.setFunction(function (arg1, arg2) {
 ````
 
 Of course you could use `setFunction` to do other stuff too, but before you do,
-read about call monitoring below.
+read the next section.
 
 Call monitoring
 ---------------
