@@ -1,6 +1,8 @@
 (function () {
     "use strict";
 
+    module = QUnit.module;
+
     module("Object mocking", {
         setup : function () {
             this.objectToMock = {
