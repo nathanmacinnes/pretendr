@@ -1,7 +1,7 @@
 {
     "name" : "Mockery",
     "description" : "A simple mocking function for unit testing",
-    "version" : "0.1",
+    "version" : "v0.1.0",
     "author" : "Nathan MacInnes <nathan@macinn.es>",
     "repository" : {
         "type" : "git",
