@@ -1,4 +1,5 @@
 /*jslint maxlen: 80, indent: 4 */
+/*Global exports */
 
 var MOCKERY = function (obj, proto) {
     "use strict";
@@ -21,10 +22,12 @@ var MOCKERY = function (obj, proto) {
             mockFn.calls.push(args);
             mockFn.calls.last = args;
             if (typeof returnFunction === 'function') {
-                return returnFunction.apply(this, args);
+                ret = returnFunction.apply(this, args);
+            } else {
+                ret = returnValues[callCount % returnValues.length];
+                callCount = callCount + 1;
             }
-            ret = returnValues[callCount % returnValues.length];
-            callCount = callCount + 1;
+            mockFn.calls.last.returned = ret;
             return ret;
         };
         mockFn.setReturnValue = function () {
@@ -70,3 +73,7 @@ var MOCKERY = function (obj, proto) {
         return obj;
     }
 };
+
+if (exports) {
+    exports.mock = MOCKERY;
+}

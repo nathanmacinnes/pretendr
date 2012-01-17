@@ -1,6 +1,8 @@
 (function () {
     "use strict";
 
+    var MOCKERY = MOCKERY || require('../source/mockery.js').mock;
+
     module = QUnit.module;
 
     module("Object mocking", {
@@ -114,6 +116,18 @@
         mock = MOCKERY(fn);
         equal(mock.aProperty, fn.aProperty);
         equal(mock.anotherProperty.original, fn.anotherProperty);
+    });
+    test("return values of functions are recorded as part of the calls", function () {
+        this.mockObj.setReturnValue(34);
+        this.mockObj();
+        this.mockObj.setFunction(function () {
+            return "5";
+        });
+        this.mockObj();
+        equal(this.mockObj.calls[0].returned, 34,
+            "first call returned 34");
+        equal(this.mockObj.calls[1].returned, "5",
+            "second call returned \"5\"");
     });
 
     module("Mocking arrays", {

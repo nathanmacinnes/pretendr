@@ -1,0 +1,17 @@
+{
+    "name" : "Mockery",
+    "description" : "A simple mocking function for unit testing",
+    "version" : "0.1",
+    "author" : "Nathan MacInnes <nathan@macinn.es>",
+    "repository" : {
+        "type" : "git",
+        "url" : "http://github.com/nathanmacinnes/Mockery"
+    },
+    "keywords" : ["tdd", "unit", "testing", "tests", "mock", "stub"],
+    "licenses" : [
+        {
+            "type" : "MIT",
+            "url" : "http://www.opensource.org/licenses/mit-license.php"
+        }
+    ]
+}
