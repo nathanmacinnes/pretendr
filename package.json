@@ -34,5 +34,5 @@
         "lib" : "lib",
         "test" : "test"
     },
-    "main" : "source/mockery"
+    "main" : "lib/mockery"
 }
