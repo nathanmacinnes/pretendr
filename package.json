@@ -19,7 +19,7 @@
         }
     ],
     "devDependencies" : {
-        "qunit" : "0.2"
+        "qunit" : ">=0.2"
     },
     "files" : [
        "Makefile",
@@ -37,5 +37,5 @@
         "lib" : "lib",
         "test" : "test"
     },
-    "main" : "source/mockery"
+    "main" : "lib/mockery"
 }
