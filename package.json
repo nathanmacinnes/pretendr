@@ -25,7 +25,10 @@
        "Makefile",
        "README.md",
        "lib/",
-       "test/"
+       "lib/mockery.js",
+       "test/",
+       "test/runner.js",
+       "test/tests.js"
     ],
     "scripts" : {
         "test" : "test/runner.js"
