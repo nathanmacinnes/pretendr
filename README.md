@@ -21,6 +21,7 @@ var myMock = MOCKERY(myObj);
 ````
 
 Or in node:
+
 ````javascript
 var mockery = require('mockery');
 mockery.mock(myObj);
