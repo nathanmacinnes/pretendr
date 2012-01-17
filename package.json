@@ -1,16 +1,16 @@
 {
-    "name" : "Mockery",
+    "name" : "pretendr",
     "description" : "A mocking function for unit testing",
-    "version" : "v0.1.2",
+    "version" : "v0.1.3",
     "author" : "Nathan MacInnes <nathan@macinn.es>",
     "repository" : {
         "type" : "git",
-        "url" : "http://github.com/nathanmacinnes/Mockery"
+        "url" : "http://github.com/nathanmacinnes/pretendr"
     },
     "keywords" : ["tdd", "unit", "testing", "tests", "mock", "stub"],
     "bugs" : {
         "mail" : "nathan@macinn.es",
-        "url" : "http://github.com/nathanmacinnes/Mockery/issues"
+        "url" : "http://github.com/nathanmacinnes/pretendr/issues"
     },
     "licenses" : [
         {
@@ -25,10 +25,7 @@
        "Makefile",
        "README.md",
        "lib/",
-       "lib/mockery.js",
        "test/",
-       "test/runner.js",
-       "test/tests.js"
     ],
     "scripts" : {
         "test" : "test/runner.js"
@@ -37,5 +34,5 @@
         "lib" : "./lib",
         "test" : "./test"
     },
-    "main" : "lib/mockery"
+    "main" : "lib/pretendr"
 }

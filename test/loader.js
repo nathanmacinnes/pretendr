@@ -19,7 +19,7 @@
         }
     }
 
-    scriptsToLoad = ['../lib/mockery.js', 'http://code.jquery.com/qunit/qunit-git.js', 'setup.js',
+    scriptsToLoad = ['../lib/pretendr.js', 'http://code.jquery.com/qunit/qunit-git.js', 'setup.js',
         'tests.js'];
     len = scriptsToLoad.length;
     for (i = 0; i < len; i++) {
