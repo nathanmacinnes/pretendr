@@ -13,5 +13,12 @@
             "type" : "MIT",
             "url" : "http://www.opensource.org/licenses/mit-license.php"
         }
-    ]
+    ],
+    "files" : [
+       "Makefile",
+       "README.md",
+       "source/"
+       "test/"
+    ],
+    "main" : "source/mockery.js"
 }
