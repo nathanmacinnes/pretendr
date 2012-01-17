@@ -17,7 +17,7 @@
     "files" : [
        "Makefile",
        "README.md",
-       "source/"
+       "source/",
        "test/"
     ],
     "main" : "source/mockery.js"
