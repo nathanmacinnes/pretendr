@@ -1,7 +1,7 @@
-#MOCKERY
+#Mockery
 _A simple JavaScript mocking function_
 
-MOCKERY will mock your objects for you. It can be used in any JavaScript
+Mockery will mock your objects for you. It can be used in any JavaScript
 testing framework. It's easy.
 
 ##Usage
@@ -23,13 +23,13 @@ var myMock = MOCKERY(myObj);
 Or in node:
 
 ````javascript
-var mockery = require('mockery');
+var mockery = require('Mockery');
 var myMock = mockery.mock(myObj);
 ````
 
 Now `myMock.aFunction()` doesn't do stuff.
 
-MOCKERY works by creating a _deep copy_ of your object, swapping the
+Mockery works by creating a _deep copy_ of your object, swapping the
 functions for new ones which are embellished with helpful mocking features.
 
 ###Return values
@@ -85,7 +85,7 @@ var returnedObj = myMock.aFunction.calls[0].returned;
 The `returned` property is stored for every function call.
 
 ###Recursion
-MOCKERY recursively mocks your objects. So if your object contains more
+Mockery recursively mocks your objects. So if your object contains more
 objects, they too will be mocked. If it contains an array, a new array will
 be created and it's elements will all be mocked. Primitive values are copied
 from your object to the mock object, and you can change these at will.
@@ -99,10 +99,10 @@ and include it in your test suite's HTML file.
 
 ###node.js
 To install via NPM, `npm install Mockery` (note the capital M). Then include it in your test files:
-`var mockery = require('mockery.js');`.
+`var mockery = require('Mockery.js');`.
 
 Or `git clone git://github.com/nathanmacinnes/Mockery.git`. Then
-`var mockery = require('path/to/mockery/source/mockery.js');`.
+`var mockery = require('path/to/Mockery/source/mockery.js');`.
 
 ##Known issues/To-do
 
@@ -111,6 +111,6 @@ circular references in your objects until this is fixed.
 * A class mocking interface would be nice. There're a few issues to work out
 before that can happen though.
 * I've just implemented including properties in the prototype chain in the
-mocks. You can do this by passing `true` as the second argument to `MOCKERY`.
+mocks. You can do this by passing `true` as the second argument to `Mockery`.
 There is huge potential for bugs in this though, because the implementation is
 crude, so it needs to be made more robust.
