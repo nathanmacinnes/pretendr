@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    var MOCKERY = MOCKERY || require('../source/mockery.js').mock;
+    var MOCKERY = MOCKERY || require('../lib/mockery.js').mock;
 
     module = QUnit.module;
 

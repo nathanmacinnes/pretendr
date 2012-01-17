@@ -14,12 +14,12 @@
     i = scripts.length;
     while (i--) {
         if (scripts[i].src.indexOf('loader.js') !== -1) {
-            path = scripts[i].src.substring(0, scripts[i].src.lastIndexOf('/') + 1);;
+            path = scripts[i].src.substring(0, scripts[i].src.lastIndexOf('/') + 1);
             i = 0;
         }
     }
 
-    scriptsToLoad = ['../source/mockery.js', 'http://code.jquery.com/qunit/qunit-git.js', 'setup.js',
+    scriptsToLoad = ['../lib/mockery.js', 'http://code.jquery.com/qunit/qunit-git.js', 'setup.js',
         'tests.js'];
     len = scriptsToLoad.length;
     for (i = 0; i < len; i++) {
