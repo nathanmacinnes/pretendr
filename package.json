@@ -34,8 +34,8 @@
         "test" : "test/runner.js"
     },
     "directories" : {
-        "lib" : "lib",
-        "test" : "test"
+        "lib" : "./lib",
+        "test" : "./test"
     },
     "main" : "lib/mockery"
 }

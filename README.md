@@ -98,7 +98,7 @@ Download
 and include it in your test suite's HTML file.
 
 ###node.js
-To install via NPM, `npm install mockery`. Then include it in your test files:
+To install via NPM, `npm install Mockery` (note the capital M). Then include it in your test files:
 `var mockery = require('mockery.js');`.
 
 Or `git clone git://github.com/nathanmacinnes/Mockery.git`. Then
