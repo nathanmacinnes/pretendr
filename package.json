@@ -19,7 +19,7 @@
         }
     ],
     "devDependencies" : {
-        "qunit" : "0.2"
+        "qunit" : ">=0.2"
     },
     "files" : [
        "Makefile",
