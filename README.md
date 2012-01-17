@@ -24,7 +24,7 @@ Or in node:
 
 ````javascript
 var mockery = require('mockery');
-mockery.mock(myObj);
+var myMock = mockery.mock(myObj);
 ````
 
 Now `myMock.aFunction()` doesn't do stuff.
@@ -74,6 +74,15 @@ myMock.aFunction.calls[0]; // => ["here's an argument", true]
 
 As a shorthand, `calls.last` is the last element of the array (ie, the most
 recent call).
+
+Sometimes, you might want to find out what a particular call returned (for
+example, if your `setFunction` creates a new mock object. Then you can use:
+
+````javascript
+var returnedObj = myMock.aFunction.calls[0].returned;
+````
+
+The `returned` property is stored for every function call.
 
 ###Recursion
 MOCKERY recursively mocks your objects. So if your object contains more
