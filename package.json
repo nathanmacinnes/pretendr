@@ -1,7 +1,7 @@
 {
     "name" : "pretendr",
     "description" : "A mocking function for unit testing",
-    "version" : "v0.1.3",
+    "version" : "v0.1.4",
     "author" : "Nathan MacInnes <nathan@macinn.es>",
     "repository" : {
         "type" : "git",
