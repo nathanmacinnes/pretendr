@@ -17,7 +17,7 @@ var myObj = {
 Then in the browser:
 
 ````javascript
-var myMock = PRETENDR(myObj);
+var myMock = PRETENDR.mock(myObj);
 ````
 
 Or in node:
