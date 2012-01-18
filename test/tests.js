@@ -85,6 +85,13 @@
         equal(this.mockObj(), 'val1');
         equal(this.mockObj(), 2);
     });
+    test("when setting then changing multiple return values, will start from" +
+            "the beginning", function () {
+        this.mockObj.setReturnValue('val1', 2, 'value 3');
+        this.mockObj();
+        this.mockObj.setReturnValue(1, 'value 2', 'val3');
+        equal(this.mockObj(), 1);
+    });
     test("allows creating a function to define return values", function () {
         var args;
         this.mockObj.setFunction(function () {
