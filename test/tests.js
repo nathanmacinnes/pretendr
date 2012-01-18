@@ -1,13 +1,10 @@
 (function () {
     "use strict";
 
-    var pretendr;
+    var pretendr,
+        PRETENDR = PRETENDR || false;
 
-    if (require) {
-        pretendr = require('../lib/pretendr.js');
-    } else {
-        pretendr = PRETENDR;
-    }
+    pretendr = PRETENDR || require('../lib/pretendr.js');
 
     module = QUnit.module;
 
