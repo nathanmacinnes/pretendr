@@ -98,7 +98,7 @@ Download
 and include it in your test suite's HTML file.
 
 ###node.js
-To install via NPM, `npm install pretendr` (note the capital M). Then include it in your test files:
+To install via NPM, `npm install pretendr`. Then include it in your test files:
 `var pretendr = require('pretendr.js');`.
 
 Or `git clone git://github.com/nathanmacinnes/pretendr.git`. Then
