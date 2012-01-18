@@ -76,7 +76,7 @@ As a shorthand, `calls.last` is the last element of the array (ie, the most
 recent call).
 
 Sometimes, you might want to find out what a particular call returned (for
-example, if your `setFunction` creates a new mock object. Then you can use:
+example, if your `setFunction` creates a new mock object). Then you can use:
 
 ````javascript
 var returnedObj = myMock.aFunction.calls[0].returned;
