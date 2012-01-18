@@ -1,7 +1,7 @@
 #pretendr
 _A simple JavaScript mocking function_
 
-pretendr will mock your objects for you. It can be used in any JavaScript
+pretendr (_formerly Mockery_) will mock your objects for you. It can be used in any JavaScript
 testing framework. It's easy.
 
 ##Usage
