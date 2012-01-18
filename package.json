@@ -25,7 +25,7 @@
        "Makefile",
        "README.md",
        "lib/",
-       "test/",
+       "test/"
     ],
     "scripts" : {
         "test" : "test/runner.js"
