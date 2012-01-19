@@ -17,14 +17,14 @@ var myObj = {
 Then in the browser:
 
 ````javascript
-var myMock = PRETENDR.mock(myObj);
+var myMock = PRETENDR(myObj);
 ````
 
 Or in node:
 
 ````javascript
 var pretendr = require('pretendr');
-var myMock = pretendr.mock(myObj);
+var myMock = pretendr(myObj);
 ````
 
 Now `myMock.aFunction()` doesn't do stuff.

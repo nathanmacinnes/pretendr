@@ -12,7 +12,7 @@
                     subPrimitive : 2
                 }
             };
-            this.mockObj = PRETENDR.mock(this.objectToMock);
+            this.mockObj = PRETENDR(this.objectToMock);
         }
     });
 
@@ -40,7 +40,7 @@
                 },
                 method1 : function () {}
             };
-            this.mockObj = PRETENDR.mock(this.objectToMock);
+            this.mockObj = PRETENDR(this.objectToMock);
         }
     });
 
@@ -57,7 +57,7 @@
                 fn.called = true;
             };
             this.objectToMock = fn;
-            this.mockObj = PRETENDR.mock(this.objectToMock);
+            this.mockObj = PRETENDR(this.objectToMock);
         }
     });
 
@@ -118,7 +118,7 @@
             mock;
         fn.aProperty = 34;
         fn.anotherProperty = {};
-        mock = PRETENDR.mock(fn);
+        mock = PRETENDR(fn);
         equal(mock.aProperty, fn.aProperty);
         equal(mock.anotherProperty.original, fn.anotherProperty);
     });
@@ -138,7 +138,7 @@
     module("Mocking arrays", {
         setup : function () {
             this.objectToMock = [0, true, 'two'];
-            this.mockObj = PRETENDR.mock(this.objectToMock);
+            this.mockObj = PRETENDR(this.objectToMock);
         }
     });
 
@@ -151,7 +151,7 @@
     });
     test("if arrays have non-primitive types as their elements, they will be mocked", function () {
         var objectToMock = [{}, [], function () {}],
-            mockObj = PRETENDR.mock(objectToMock);
+            mockObj = PRETENDR(objectToMock);
         equal(mockObj[0].original, objectToMock[0]);
         deepEqual(mockObj[1], objectToMock[1]);
         deepEqual(mockObj[2].calls, []);
@@ -160,7 +160,7 @@
         var arr = [12],
             mock;
         arr.aProperty = {};
-        mock = PRETENDR.mock(arr);
+        mock = PRETENDR(arr);
         equal(mock.aProperty.original, arr.aProperty);
     });
 
@@ -172,7 +172,7 @@
             ConstructorFn.prototype.protoFn = function () {
             };
             this.obj = new ConstructorFn();
-            this.mock = PRETENDR.mock(this.obj, true);
+            this.mock = PRETENDR(this.obj, true);
         }
     });
 
