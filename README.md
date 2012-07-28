@@ -1,116 +1,61 @@
-#pretendr
-_A simple JavaScript mocking function_
+# pretendr #
 
-pretendr (_formerly Mockery_) will mock your objects for you. It can be used in any JavaScript
-testing framework. It's easy.
+_Powerful JavaScript mocking_
 
-##Usage
+## Install it ##
 
-````javascript
-var myObj = {
-    aFunction : function () {
-        // do some stuff
-    }
-};
-````
+`npm install pretendr`.
 
-Then in the browser:
+## Use it ##
 
-````javascript
-var myMock = PRETENDR(myObj);
-````
-
-Or in node:
+First include it in the usual way.
 
 ````javascript
 var pretendr = require('pretendr');
-var myMock = pretendr(myObj);
 ````
 
-Now `myMock.aFunction()` doesn't do stuff.
-
-pretendr works by creating a _deep copy_ of your object, swapping the
-functions for new ones which are embellished with helpful mocking features.
-
-###Return values
-To set a return value, use `myMock.aFunction.setReturnValue('a string');`. Now
-calling `myMock.aFunction()` returns `'a string'`. You can also pass multiple
-values, and the function will loop through them:
+Then mock your objects. You can pass in real objects but I prefer to create a dummy
+with only the bits I need.
 
 ````javascript
-myMock.aFunction.setReturnValue('one', 'two', 'three');
-
-myMock.aFunction(); // 'one'
-myMock.aFunction(); // 'two'
-myMock.aFunction(); // 'three'
-myMock.aFunction(); // 'one'
-````
-
-Or use a function to set the return value:
-
-````javascript
-myMock.aFunction.setFunction(function (arg1, arg2) {
-    if (arg1 === 'one' && arg2 === 'two') {
-        return true;
-    }
-    return false;
+var mockFs = pretendr({
+	readFile : function () {},
+	readFileSync : function () {}
 });
 ````
 
-Of course you could use `setFunction` to do other stuff too, but before you do,
-read the next section.
-
-###Call monitoring
-All calls to mocked functions are recorded in the `calls` property, which is an
-array of function calls. To get the number of times a function has been called
-`myMock.aFunction.calls.length`.
-
-You can also get the argument values of each call:
+`mockFs` now contains a `mock` property, which is what you pass in to your code for
+testing as a substitute for the real thing.
 
 ````javascript
-myMock.aFunction("here's an argument", true);
-myMock.aFunction.calls[0]; // => ["here's an argument", true]
+var fs = mockFs.mock;
+fs.readFile('f.txt', cb);
+fs.readFileSync('f.txt');
 ````
 
-As a shorthand, `calls.last` is the last element of the array (ie, the most
-recent call).
-
-Sometimes, you might want to find out what a particular call returned (for
-example, if your `setFunction` creates a new mock object). Then you can use:
+It also has a list of properties to help you with your testing. First, record
+the calls. These are the most useful, but there are plenty of others.
 
 ````javascript
-var returnedObj = myMock.aFunction.calls[0].returned;
+assert.equal(fs.readFile.calls[0].args[1], 'f.txt');
+assert.equal(fs.readFile.calls[0].context, fs.mock);
+
+// finish reading and pass in some data
+mockFs.readFile.calls[0].callback(null, 'dummy data');
+// or set the return value of the sync version before it's called
+mockFs.readFileSync.returnValue('dummy data');
+// or set a dummy function to run when it is called
+mockFs.readFileSync.fake(function (filename) {
+    var result;
+    ...
+    return result;
+});
 ````
 
-The `returned` property is stored for every function call.
+There are plenty of other features. To find out about them, have a look at the
+spec in the `test` directory.
 
-###Recursion
-pretendr recursively mocks your objects. So if your object contains more
-objects, they too will be mocked. If it contains an array, a new array will
-be created and it's elements will all be mocked. Primitive values are copied
-from your object to the mock object, and you can change these at will.
+## Share it ##
 
-##Installation
-
-###browser
-Download
-[pretendr.js](http://github.com/nathanmacinnes/pretendr/blob/master/source/pretendr.js)
-and include it in your test suite's HTML file.
-
-###node.js
-To install via NPM, `npm install pretendr`. Then include it in your test files:
-`var pretendr = require('pretendr.js');`.
-
-Or `git clone git://github.com/nathanmacinnes/pretendr.git`. Then
-`var pretendr = require('path/to/pretendr/source/pretendr.js');`.
-
-##Known issues/To-do
-
-* Circular references will cause infinite recursion. Make sure there are no
-circular references in your objects until this is fixed.
-* A class mocking interface would be nice. There're a few issues to work out
-before that can happen though.
-* I've just implemented including properties in the prototype chain in the
-mocks. You can do this by passing `true` as the second argument to `pretendr`.
-There is huge potential for bugs in this though, because the implementation is
-crude, so it needs to be made more robust.
+**pretendr** is under the [MIT License](http://www.opensource.org/licenses/MIT).
+[Fork it](https://github.com/nathanmacinnes/pretendr). Modify it. Pass it around.

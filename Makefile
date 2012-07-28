@@ -1,4 +1,7 @@
-test :
-	node ./test/runner.js
+test:
+	./node_modules/.bin/mocha
 
-.PHONY: install test
+lint:
+	./node_modules/.bin/jslint ./lib/pretendr.js ./test/spec.js
+
+.PHONY: test
