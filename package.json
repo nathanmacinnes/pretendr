@@ -18,10 +18,15 @@
             "url" : "http://www.opensource.org/licenses/mit-license.php"
         }
     ],
+    "scripts" : {
+        "test" : "make test",
+        "lint" : "make lint"
+    },
 	"dependencies" : {},
     "devDependencies" : {
         "mocha" : ">=1.0.0",
-		"expect.js" : ">=0.1.0"
+		"expect.js" : ">=0.1.0",
+		"jslint" : ">=0.1.0"
     },
     "files" : [
        "Makefile",
