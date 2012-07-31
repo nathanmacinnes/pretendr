@@ -192,7 +192,7 @@ describe("pretendr", function () {
             });
         });
 		describe("#template", function () {
-			it("should be able to define returnValues", function () {
+			it("should be able to define return values", function () {
 				var m = this.pretendr(function () {}),
 					res,
 					t;
@@ -200,6 +200,18 @@ describe("pretendr", function () {
 				t.returnValue('a');
 				res = m.mock();
 				expect(res()).to.equal('a');
+			});
+			it("should be able to define a fake", function () {
+				var fake,
+					m = this.pretendr(function () {}),
+					res,
+					t;
+				t = m.template(function () {});
+				fake = this.pretendr(function () {});
+				t.fake(fake.mock);
+				res = m.mock();
+				res();
+				expect(fake.calls).to.have.length(1);
 			});
 		});
         describe("with properties", function () {
