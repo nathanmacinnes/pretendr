@@ -191,6 +191,17 @@ describe("pretendr", function () {
                 expect(instance).to.be.a(this.p.mock);
             });
         });
+		describe("#template", function () {
+			it("should be able to define returnValues", function () {
+				var m = this.pretendr(function () {}),
+					res,
+					t;
+				t = m.template(function () {});
+				t.returnValue('a');
+				res = m.mock();
+				expect(res()).to.equal('a');
+			});
+		});
         describe("with properties", function () {
             it("should mock the properties", function () {
                 var fn = function () {};
