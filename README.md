@@ -53,7 +53,7 @@ mockFs.readFileSync.fake(function (filename) {
 ````
 
 There are plenty of other features. To find out about them, have a look at the
-spec in the `test` directory.
+[./examples.md](examples.md) file.
 
 ## Share it ##
 
