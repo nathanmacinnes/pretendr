@@ -334,6 +334,14 @@ describe("pretendr", function () {
             res = m.mock();
             expect(res.method()).to.equal(4);
         });
+        it("shouldn't have meaningless methods for objects", function () {
+            var m = this.pretendr(function () {}),
+                t;
+            t = m.template({});
+            expect(t).to.not.have.property('returnValue')
+                .and.not.have.property('fake')
+                .and.not.have.property('template');
+        });
     });
     describe("array", function () {
         beforeEach(function () {
