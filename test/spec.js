@@ -328,11 +328,16 @@ describe("pretendr", function () {
                 res,
                 t;
             t = m.template({
-                method : function () {}
+                method : function () {},
+                property : {
+                    subMethod : function () {}
+                }
             });
             t.method.returnValue(4);
+            t.property.subMethod.returnValue(5);
             res = m.mock();
             expect(res.method()).to.equal(4);
+            expect(res.property.subMethod()).to.equal(5);
         });
         it("shouldn't have meaningless methods for objects", function () {
             var m = this.pretendr(function () {}),
