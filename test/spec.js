@@ -213,6 +213,28 @@ describe("pretendr", function () {
 				res();
 				expect(fake.calls).to.have.length(1);
 			});
+			it("should be able to have a template of its own", function () {
+				var m = this.pretendr(function () {}),
+					res,
+					subT = { a : 'b' },
+					t;
+				t = m.template(function () {});
+				t = t.template(subT);
+				res = m.mock();
+				res = res();
+				expect(res).to.have.property('a', 'b');
+			});
+			it("should be deep like pretendr objects", function () {
+				var m = this.pretendr(function () {}),
+					res,
+					t;
+				t = m.template({
+					method : function () {}
+				});
+				t.method.returnValue(4);
+				res = m.mock();
+				expect(res.method()).to.equal(4);
+			});
 		});
         describe("with properties", function () {
             it("should mock the properties", function () {
