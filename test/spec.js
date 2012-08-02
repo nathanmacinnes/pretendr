@@ -75,97 +75,104 @@ describe("pretendr", function () {
     });
     describe("object", function () {
         beforeEach(function () {
-            this.o = {};
-            this.p = this.pretendr(this.o);
+            this.objToMock = {};
+            this.pretendrResult = this.pretendr(this.objToMock);
         });
         it("should return a new object", function () {
-            expect(this.p.mock).to.be.an('object');
-            expect(this.p.mock).to.not.equal(this.o);
+            expect(this.pretendrResult.mock).to.be.an('object');
+            expect(this.pretendrResult.mock).to.not.equal(this.o);
         });
         describe("with properties", function () {
             beforeEach(function () {
-                this.o = {
+                this.objToMock = {
                     method : function () {}
                 };
-                this.p = this.pretendr(this.o);
+                this.pretendrResult = this.pretendr(this.objToMock);
             });
             it("should pretendr the methods", function () {
-                this.p.mock.method();
-                expect(this.p.method).to.be.pretendr(this.p.method.mock);
+                this.pretendrResult.mock.method();
+                expect(this.pretendrResult.method)
+                    .to.be.pretendr(this.pretendrResult.method.mock);
             });
         });
         describe("with circular reference", function () {
             beforeEach(function () {
-                this.o = {};
-                this.o.circular = this.o;
-                this.p = this.pretendr(this.o);
+                this.objToMock = {};
+                this.objToMock.circular = this.objToMock;
+                this.pretendrResult = this.pretendr(this.objToMock);
             });
             it("should make references equal", function () {
-                expect(this.o.circular).to.equal(this.o);
+                expect(this.objToMock.circular).to.equal(this.objToMock);
             });
             it("should allow creation of new copies", function () {
-                var n = this.pretendr(this.o);
-                expect(n).to.not.equal(this.p);
+                var n = this.pretendr(this.objToMock);
+                expect(n).to.not.equal(this.pretendrResult);
             });
         });
     });
     describe("function", function () {
         beforeEach(function () {
-            this.p = this.pretendr(function () {});
+            this.pretendrResult = this.pretendr(function () {});
         });
         it("should record the calls to the mock", function () {
-            expect(this.p.calls).to.have.length(0);
-            this.p.mock();
-            expect(this.p.calls).to.have.length(1);
-            this.p.mock();
-            expect(this.p.calls).to.have.length(2);
+            expect(this.pretendrResult.calls).to.have.length(0);
+            this.pretendrResult.mock();
+            expect(this.pretendrResult.calls).to.have.length(1);
+            this.pretendrResult.mock();
+            expect(this.pretendrResult.calls).to.have.length(2);
         });
         it("should record the arguments to each call", function () {
-            this.p.mock('foo', 'bar');
-            expect(this.p.calls[0]).to.have.property('args');
-            expect(this.p.calls[0].args).to.have.property(0, 'foo');
-            expect(this.p.calls[0].args).to.have.property(1, 'bar');
-            this.p.mock('baz');
-            expect(this.p.calls[1].args).to.have.property(0, 'baz');
+            var calls;
+            this.pretendrResult.mock('foo', 'bar');
+            calls = this.pretendrResult.calls;
+            expect(calls[0]).to.have.property('args');
+            expect(calls[0].args).to.have.property(0, 'foo');
+            expect(calls[0].args).to.have.property(1, 'bar');
+            this.pretendrResult.mock('baz');
+            expect(calls[1].args).to.have.property(0, 'baz');
         });
         it("should return the context of each call", function () {
             var context = {};
-            this.p.mock.call(context);
-            expect(this.p.calls[0]).to.have.property('context', context);
+            this.pretendrResult.mock.call(context);
+            expect(this.pretendrResult.calls[0])
+                .to.have.property('context', context);
         });
         it("should have a settable return value", function () {
-            this.p.returnValue('baz');
-            expect(this.p.mock()).to.equal('baz');
+            this.pretendrResult.returnValue('baz');
+            expect(this.pretendrResult.mock()).to.equal('baz');
         });
         it("should run and return a fake function", function () {
             var ret,
                 fake = this.pretendr(function () {});
             fake.returnValue(0);
-            this.p.fake(fake.mock);
-            ret = this.p.mock('arg1');
+            this.pretendrResult.fake(fake.mock);
+            ret = this.pretendrResult.mock('arg1');
             expect(fake.calls).to.have.length(1);
             expect(fake.calls[0].args[0]).to.equal('arg1');
             expect(ret).to.equal(0);
         });
         it("should record the returned values", function () {
-            this.p.returnValue(6);
-            this.p.mock();
-            expect(this.p.calls[0]).to.have.property('returned', 6);
-            this.p.fake(function () {
+            this.pretendrResult.returnValue(6);
+            this.pretendrResult.mock();
+            expect(this.pretendrResult.calls[0])
+                .to.have.property('returned', 6);
+            this.pretendrResult.fake(function () {
                 return 1;
             });
-            this.p.mock();
-            expect(this.p.calls[1]).to.have.property('returned', 1);
+            this.pretendrResult.mock();
+            expect(this.pretendrResult.calls[1])
+                .to.have.property('returned', 1);
         });
         it("should be able to find the callback function", function () {
             var cb = this.pretendr(function () {}),
                 ret = {};
-            this.p.mock(cb.mock);
-            this.p.calls[0].callback();
+            this.pretendrResult.mock(cb.mock);
+            this.pretendrResult.calls[0].callback();
             expect(cb.calls).to.have.length(1);
-            this.p.mock(1, '2', cb.mock);
+            this.pretendrResult.mock(1, '2', cb.mock);
             cb.returnValue(ret);
-            expect(this.p.calls[1].callback('argument to callback'))
+            expect(this.pretendrResult.calls[1]
+                .callback('argument to callback'))
                 .to.equal(ret);
             expect(cb.calls).to.have.length(2);
             expect(cb.calls[1].args[0]).to.equal('argument to callback');
@@ -175,70 +182,73 @@ describe("pretendr", function () {
                 template = {
                     a : function () {}
                 };
-            this.p.template(template);
-            this.p.mock();
-            calls = this.p.calls;
+            this.pretendrResult.template(template);
+            this.pretendrResult.mock();
+            calls = this.pretendrResult.calls;
             expect(calls[0].pretendr).to.be.pretendr(template);
-            this.p.mock();
+            this.pretendrResult.mock();
             expect(calls[1].pretendr).to.not.equal(calls[0].pretendr);
         });
         describe("as constructor", function () {
             it("should record instances", function () {
                 var instance,
-                    Mock = this.p.mock;
-                expect(this.p.instances).to.have.length(0);
+                    Mock = this.pretendrResult.mock;
+                expect(this.pretendrResult.instances).to.have.length(0);
                 instance = new Mock();
-                expect(this.p.instances).to.have.length(1);
+                expect(this.pretendrResult.instances).to.have.length(1);
                 instance = new Mock();
-                expect(this.p.instances).to.have.length(2);
+                expect(this.pretendrResult.instances).to.have.length(2);
             });
             it("should record the instance which is returned", function () {
                 var instance,
-                    Mock = this.p.mock,
+                    Mock = this.pretendrResult.mock,
                     template = {
                         a : function () {}
                     };
-                this.p.template(template);
+                this.pretendrResult.template(template);
                 instance = new Mock();
-                expect(instance).to.equal(this.p.instances[0].mock);
+                expect(instance)
+                    .to.equal(this.pretendrResult.instances[0].mock);
             });
             it("should not record function calls as instances", function () {
-                this.p.mock();
-                this.p.mock.call({});
-                expect(this.p.instances).to.have.length(0);
+                this.pretendrResult.mock();
+                this.pretendrResult.mock.call({});
+                expect(this.pretendrResult.instances).to.have.length(0);
             });
             it("returned instances should be pretendr objects", function () {
                 var instance,
-                    Mock = this.p.mock,
+                    Mock = this.pretendrResult.mock,
                     template = {
                         method : function () {}
                     };
-                this.p.template(template);
+                this.pretendrResult.template(template);
                 instance = new Mock();
                 instance.method();
-                expect(this.p.instances[0]).to.be.pretendr(template);
+                expect(this.pretendrResult.instances[0])
+                    .to.be.pretendr(template);
             });
             it("should always return actual instances", function () {
                 var instance,
-                    Mock = this.p.mock,
+                    Mock = this.pretendrResult.mock,
                     template = {};
-                this.p.template(template);
+                this.pretendrResult.template(template);
                 instance = new Mock();
-                expect(instance).to.be.a(this.p.mock);
+                expect(instance).to.be.a(this.pretendrResult.mock);
             });
         });
         describe("with properties", function () {
             it("should mock the properties", function () {
                 var fn = function () {};
                 fn.method = function () {};
-                this.p = this.pretendr(fn);
-                expect(this.p.method).to.be.pretendr(fn.method);
+                this.pretendrResult = this.pretendr(fn);
+                expect(this.pretendrResult.method).to.be.pretendr(fn.method);
             });
             it("should handle circular references", function () {
                 var fn = function () {};
                 fn.method = fn;
-                this.p = this.pretendr(fn);
-                expect(this.p).to.equal(this.p.method);
+                this.pretendrResult = this.pretendr(fn);
+                expect(this.pretendrResult)
+                    .to.equal(this.pretendrResult.method);
             });
         });
     });
@@ -351,13 +361,13 @@ describe("pretendr", function () {
     describe("array", function () {
         beforeEach(function () {
             var fn = function () {};
-            this.o = [1, 'two', fn];
-            this.p = this.pretendr(this.o);
+            this.objToMock = [1, 'two', fn];
+            this.p = this.pretendr(this.objToMock);
         });
         it("should create another array as the mock", function () {
             expect(this.p.mock).to.be.an('array')
-                .and.to.not.equal(this.o)
-                .and.to.have.length(this.o.length);
+                .and.to.not.equal(this.objToMock)
+                .and.to.have.length(this.objToMock.length);
         });
         it("should mock the elements", function () {
             var assigned = this.p.mock[0];
