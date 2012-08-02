@@ -73,6 +73,42 @@ describe("pretendr", function () {
     beforeEach(function () {
         this.pretendr = require('../lib/pretendr.js');
     });
+    describe("object", function () {
+        beforeEach(function () {
+            this.o = {};
+            this.p = this.pretendr(this.o);
+        });
+        it("should return a new object", function () {
+            expect(this.p.mock).to.be.an('object');
+            expect(this.p.mock).to.not.equal(this.o);
+        });
+        describe("with properties", function () {
+            beforeEach(function () {
+                this.o = {
+                    method : function () {}
+                };
+                this.p = this.pretendr(this.o);
+            });
+            it("should pretendr the methods", function () {
+                this.p.mock.method();
+                expect(this.p.method).to.be.pretendr(this.p.method.mock);
+            });
+        });
+        describe("with circular reference", function () {
+            beforeEach(function () {
+                this.o = {};
+                this.o.circular = this.o;
+                this.p = this.pretendr(this.o);
+            });
+            it("should make references equal", function () {
+                expect(this.o.circular).to.equal(this.o);
+            });
+            it("should allow creation of new copies", function () {
+                var n = this.pretendr(this.o);
+                expect(n).to.not.equal(this.p);
+            });
+        });
+    });
     describe("function", function () {
         beforeEach(function () {
             this.p = this.pretendr(function () {});
@@ -191,51 +227,6 @@ describe("pretendr", function () {
                 expect(instance).to.be.a(this.p.mock);
             });
         });
-        describe("#template", function () {
-            it("should be able to define return values", function () {
-                var m = this.pretendr(function () {}),
-                    res,
-                    t;
-                t = m.template(function () {});
-                t.returnValue('a');
-                res = m.mock();
-                expect(res()).to.equal('a');
-            });
-            it("should be able to define a fake", function () {
-                var fake,
-                    m = this.pretendr(function () {}),
-                    res,
-                    t;
-                t = m.template(function () {});
-                fake = this.pretendr(function () {});
-                t.fake(fake.mock);
-                res = m.mock();
-                res();
-                expect(fake.calls).to.have.length(1);
-            });
-            it("should be able to have a template of its own", function () {
-                var m = this.pretendr(function () {}),
-                    res,
-                    subT = { a : 'b' },
-                    t;
-                t = m.template(function () {});
-                t = t.template(subT);
-                res = m.mock();
-                res = res();
-                expect(res).to.have.property('a', 'b');
-            });
-            it("should be deep like pretendr objects", function () {
-                var m = this.pretendr(function () {}),
-                    res,
-                    t;
-                t = m.template({
-                    method : function () {}
-                });
-                t.method.returnValue(4);
-                res = m.mock();
-                expect(res.method()).to.equal(4);
-            });
-        });
         describe("with properties", function () {
             it("should mock the properties", function () {
                 var fn = function () {};
@@ -299,40 +290,49 @@ describe("pretendr", function () {
             expect(prim.primitive.gets).to.equal(2);
         });
     });
-    describe("object", function () {
-        beforeEach(function () {
-            this.o = {};
-            this.p = this.pretendr(this.o);
+    describe("#template", function () {
+        it("should be able to define return values", function () {
+            var m = this.pretendr(function () {}),
+                res,
+                t;
+            t = m.template(function () {});
+            t.returnValue('a');
+            res = m.mock();
+            expect(res()).to.equal('a');
         });
-        it("should return a new object", function () {
-            expect(this.p.mock).to.be.an('object');
-            expect(this.p.mock).to.not.equal(this.o);
+        it("should be able to define a fake", function () {
+            var fake,
+                m = this.pretendr(function () {}),
+                res,
+                t;
+            t = m.template(function () {});
+            fake = this.pretendr(function () {});
+            t.fake(fake.mock);
+            res = m.mock();
+            res();
+            expect(fake.calls).to.have.length(1);
         });
-        describe("with properties", function () {
-            beforeEach(function () {
-                this.o = {
-                    method : function () {}
-                };
-                this.p = this.pretendr(this.o);
-            });
-            it("should pretendr the methods", function () {
-                this.p.mock.method();
-                expect(this.p.method).to.be.pretendr(this.p.method.mock);
-            });
+        it("should be able to have a template of its own", function () {
+            var m = this.pretendr(function () {}),
+                res,
+                subT = { a : 'b' },
+                t;
+            t = m.template(function () {});
+            t = t.template(subT);
+            res = m.mock();
+            res = res();
+            expect(res).to.have.property('a', 'b');
         });
-        describe("with circular reference", function () {
-            beforeEach(function () {
-                this.o = {};
-                this.o.circular = this.o;
-                this.p = this.pretendr(this.o);
+        it("should be deep like pretendr objects", function () {
+            var m = this.pretendr(function () {}),
+                res,
+                t;
+            t = m.template({
+                method : function () {}
             });
-            it("should make references equal", function () {
-                expect(this.o.circular).to.equal(this.o);
-            });
-            it("should allow creation of new copies", function () {
-                var n = this.pretendr(this.o);
-                expect(n).to.not.equal(this.p);
-            });
+            t.method.returnValue(4);
+            res = m.mock();
+            expect(res.method()).to.equal(4);
         });
     });
     describe("array", function () {
