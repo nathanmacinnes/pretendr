@@ -358,6 +358,16 @@ describe("pretendr", function () {
                 .and.not.have.property('fake')
                 .and.not.have.property('template');
         });
+		it("should not handle infinite loops", function () {
+			var mockObj = this.pretendr(function () {}),
+				templateDescriptor,
+				template;
+			templateDescriptor = {};
+			templateDescriptor.a = templateDescriptor;
+			expect(function () {
+				mockObj.template(templateDescriptor);
+			}).to.not.throwError();
+		});
     });
     describe("array", function () {
         beforeEach(function () {
