@@ -368,6 +368,10 @@ describe("pretendr", function () {
 				mockObj.template(templateDescriptor);
 			}).to.not.throwError();
 		});
+		it("should not have a mock property", function () {
+		    var template = this.pretendr(function () {}).template({});
+		    expect(template).to.not.have.property('mock');
+		});
     });
     describe("array", function () {
         beforeEach(function () {
