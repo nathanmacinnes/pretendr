@@ -1,7 +1,7 @@
 {
     "name" : "pretendr",
     "description" : "Powerful JavaScript mocking",
-    "version" : "v0.5.0",
+    "version" : "v0.5.1",
     "author" : "Nathan MacInnes <nathan@macinn.es>",
     "repository" : {
         "type" : "git",
@@ -36,6 +36,7 @@
     ],
     "scripts" : {
         "test" : "./node_modules/.bin/mocha"
+        "lint" : "./node_modules/.bin/jslint ./lib/pretendr.js ./test/spec.js"
     },
     "directories" : {
         "lib" : "./lib",
