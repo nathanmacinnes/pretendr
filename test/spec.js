@@ -271,17 +271,17 @@ describe("pretendr", function () {
             expect(this.str.mock).to.equal('a string');
             expect(this.bool.mock).to.equal(true);
         });
-        xit("should return the number of gets", function () {
+        it("should return the number of gets", function () {
             expect(this.num.gets).to.equal(0);
             var assigned = this.num.mock;
             expect(this.num.gets).to.equal(1);
         });
-        xit("should record the value changes", function () {
+        it("should record the value changes", function () {
             expect(this.num.values).to.have.length(0);
             this.num.mock = 6;
             expect(this.num.values).to.have.property(0, 6);
         });
-        xit("should not try to return the gets if not supported", function () {
+        it("should not try to return the gets if not supported", function () {
             var prim;
             Object.defineProperty = undefined;
             prim = this.pretendr(4);
@@ -289,11 +289,12 @@ describe("pretendr", function () {
             expect(prim).to.not.have.property('gets');
             expect(prim).to.not.have.property('values');
         });
-        xit("should return gets on primitives in object context", function () {
+        it("should return gets on primitives in object context", function () {
             var b,
                 prim = this.pretendr({
                     primitive : 'a'
                 });
+            expect(prim.primitive.gets).to.equal(0);
             b = prim.mock.primitive;
             expect(prim.primitive.gets).to.equal(1);
             b = prim.mock.primitive;
@@ -384,7 +385,7 @@ describe("pretendr", function () {
                 .and.not.to.equal(this.objToMock)
                 .and.to.have.length(this.objToMock.length);
         });
-        xit("should mock the elements", function () {
+        it("should mock the elements", function () {
             var assigned = this.pretendrResult.mock[0];
             expect(this.pretendrResult[0].gets).to.equal(1);
             assigned = this.pretendrResult.mock[2]();
