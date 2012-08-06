@@ -189,6 +189,10 @@ describe("pretendr", function () {
             this.pretendrResult.mock();
             expect(calls[1].pretendr).to.not.equal(calls[0].pretendr);
         });
+        it("should be able to return the template", function () {
+            var template = this.pretendrResult.template({});
+            expect(this.pretendrResult.template()).to.equal(template);
+        });
         describe("as constructor", function () {
             it("should record instances", function () {
                 var instance,
