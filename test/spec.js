@@ -193,6 +193,19 @@ describe("pretendr", function () {
             var template = this.pretendrResult.template({});
             expect(this.pretendrResult.template()).to.equal(template);
         });
+        it("should make all the return options overwrite others", function () {
+            this.pretendrResult.template({
+                a : {}
+            });
+            this.pretendrResult.returnValue(5);
+            expect(this.pretendrResult.mock()).to.equal(5);
+            this.pretendrResult.fake(function () {
+                return 7;
+            });
+            expect(this.pretendrResult.mock()).to.equal(7);
+            this.pretendrResult.template(8);
+            expect(this.pretendrResult.mock()).to.equal(8);
+        });
         describe("as constructor", function () {
             it("should record instances", function () {
                 var instance,
