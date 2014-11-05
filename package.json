@@ -1,46 +1,55 @@
 {
-    "name" : "pretendr",
-    "description" : "Powerful JavaScript mocking",
-    "version" : "v0.5.2",
-    "author" : "Nathan MacInnes <nathan@macinn.es>",
-    "repository" : {
-        "type" : "git",
-        "url" : "http://github.com/nathanmacinnes/pretendr"
-    },
-    "keywords" : ["tdd", "unit", "testing", "tests", "mock", "stub"],
-    "bugs" : {
-        "mail" : "nathan@macinn.es",
-        "url" : "http://github.com/nathanmacinnes/pretendr/issues"
-    },
-    "licenses" : [
-        {
-            "type" : "MIT",
-            "url" : "http://www.opensource.org/licenses/mit-license.php"
-        }
-    ],
-    "scripts" : {
-        "test" : "make test",
-        "lint" : "make lint"
-    },
-	"dependencies" : {},
-    "devDependencies" : {
-        "mocha" : ">=1.0.0",
-		"expect.js" : ">=0.1.0",
-		"jslint" : ">=0.1.0"
-    },
-    "files" : [
-       "Makefile",
-       "README.md",
-       "lib/",
-       "test/"
-    ],
-    "scripts" : {
-        "test" : "./node_modules/.bin/mocha",
-        "lint" : "./node_modules/.bin/jslint ./lib/pretendr.js ./test/spec.js"
-    },
-    "directories" : {
-        "lib" : "./lib",
-        "test" : "./test"
-    },
-    "main" : "lib/pretendr"
+  "name": "pretendr",
+  "description": "Powerful JavaScript mocking",
+  "version": "v0.5.2",
+  "author": "Nathan MacInnes <nathan@macinn.es>",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/nathanmacinnes/pretendr"
+  },
+  "keywords": [
+    "tdd",
+    "unit",
+    "testing",
+    "tests",
+    "mock",
+    "stub"
+  ],
+  "bugs": {
+    "mail": "nathan@macinn.es",
+    "url": "http://github.com/nathanmacinnes/pretendr/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+  ],
+  "scripts": {
+    "test": "grunt test",
+    "lint": "grunt lint"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "expect.js": "0.1.0 - 0.3.x",
+    "grunt": "^0.4.4",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-jscs": "^0.8.1",
+    "grunt-mdlint": "0.0.1",
+    "grunt-mocha-test": "^0.10.2",
+    "jshint": "~2.5",
+    "mocha": "^1.18.2"
+  },
+  "files": [
+    "Makefile",
+    "README.md",
+    "lib/",
+    "test/"
+  ],
+  "directories": {
+    "lib": "./lib",
+    "test": "./test"
+  },
+  "main": "lib/pretendr"
 }

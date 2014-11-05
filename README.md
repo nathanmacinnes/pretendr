@@ -8,14 +8,12 @@ _Powerful JavaScript mocking_
 
 ## Use it ##
 
-First include it in the usual way.
-
 ````javascript
 var pretendr = require('pretendr');
 ````
 
-Then mock your objects. You can pass in real objects but I prefer to create a dummy
-with only the bits I need.
+Mock your objects. You can pass in real objects (`pretendr(require("fs"))`) but
+I prefer to keep mocks to a minimum so I know exactly what my code is doing.
 
 ````javascript
 var mockFs = pretendr({
@@ -24,8 +22,9 @@ var mockFs = pretendr({
 });
 ````
 
-`mockFs` now contains a `mock` property, which is what you pass in to your code for
-testing as a substitute for the real thing.
+`mockFs` now contains a `mock` property, which is what you pass in to your code
+for testing as a substitute for the real thing. This is virtually
+indistinguishable to your code from the object you are mocking.
 
 ````javascript
 var fs = mockFs.mock;
@@ -33,29 +32,43 @@ fs.readFile('f.txt', cb);
 fs.readFileSync('f.txt');
 ````
 
-It also has a list of properties to help you with your testing. First, record
-the calls. These are the most useful, but there are plenty of others.
+It works well with [**injectr**](https://github.com/nathanmacinnes/injectr),
+which allows you to pass in your mocks when testing.
 
-````javascript
-assert.equal(fs.readFile.calls[0].args[1], 'f.txt');
-assert.equal(fs.readFile.calls[0].context, fs.mock);
-
-// finish reading and pass in some data
-mockFs.readFile.calls[0].callback(null, 'dummy data');
-// or set the return value of the sync version before it's called
-mockFs.readFileSync.returnValue('dummy data');
-// or set a dummy function to run when it is called
-mockFs.readFileSync.fake(function (filename) {
-    var result;
-    ...
-    return result;
+````js
+var myLib = injectr("../lib/mylib.js", {
+    fs : mockFs.mock
 });
 ````
 
-There are plenty of other features. To find out about them, have a look at the
-spec in the `test` directory.
+Or you can use whichever dependency injection method you're used to.
+
+Now let's monitor the calls:
+
+````javascript
+assert.equal(fs.readFile.calls[0].args[1], 'f.txt');
+assert.equal(fs.appendFile.calls.length, 0);
+````
+
+And run the callback:
+
+````javascript
+assert.equal(fs.readFile.calls[0].callback());
+assert.equal(fs.appendFile.calls.length, 1);
+````
+
+We can set return values:
+````javascript
+mockFs.readFileSync.returnValue("some text");
+// or
+mockFs.readFileSync.fake(function () {
+    // arguments and context are correctly passed to this function
+    return "some text";
+});
+````
 
 ## Share it ##
 
 **pretendr** is under the [MIT License](http://www.opensource.org/licenses/MIT).
-[Fork it](https://github.com/nathanmacinnes/pretendr). Modify it. Pass it around.
+[Fork it](https://github.com/nathanmacinnes/pretendr). Modify it. Pass it
+around.
