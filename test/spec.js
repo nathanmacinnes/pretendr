@@ -29,15 +29,18 @@ describe("pretendr", function () {
         expect(pretendr()).to.be.an("object")
             .and.to.have.property("mock");
     });
+    it("returns a pretendr function when no arguments are given", function () {
+        expect(pretendr().mock).to.be.a("function");
+    });
     describe("with function", function () {
         var callback,
             p;
         beforeEach(function () {
 
             // dogfood
-            callback = pretendr(function () {});
+            callback = pretendr();
 
-            p = pretendr(function () {});
+            p = pretendr();
         });
         it("has an empty calls array", function () {
             expect(p.calls).to.be.an("array")
