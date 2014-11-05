@@ -42,12 +42,6 @@
     "jshint": "~2.5",
     "mocha": "^1.18.2"
   },
-  "files": [
-    "Makefile",
-    "README.md",
-    "lib/",
-    "test/"
-  ],
   "directories": {
     "lib": "./lib",
     "test": "./test"
