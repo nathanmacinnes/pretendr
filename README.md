@@ -2,6 +2,8 @@
 
 _Powerful JavaScript mocking_
 
+![travis build status](https://travis-ci.org/nathanmacinnes/pretendr.svg)
+
 ## Install it ##
 
 `npm install pretendr`.
