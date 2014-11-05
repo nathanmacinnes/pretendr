@@ -26,11 +26,11 @@
     }
   ],
   "scripts": {
-    "test": "grunt test",
-    "lint": "grunt lint"
+    "test": "grunt test lint"
   },
   "dependencies": {},
   "devDependencies": {
+    "chance": "^0.6.1",
     "expect.js": "0.1.0 - 0.3.x",
     "grunt": "^0.4.4",
     "grunt-contrib-jshint": "^0.10.0",
@@ -38,6 +38,7 @@
     "grunt-jscs": "^0.8.1",
     "grunt-mdlint": "0.0.1",
     "grunt-mocha-test": "^0.10.2",
+    "injectr": "^0.5.1",
     "jshint": "~2.5",
     "mocha": "^1.18.2"
   },
