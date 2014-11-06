@@ -274,6 +274,7 @@ describe("pretendr", function () {
             expect(p.mock).to.be.an("array");
         });
         it("resembles the descriptor", function () {
+            // need to use join because eql doesn't like the getters/setters
             expect(p.mock.join(",")).to.equal(descriptor.join(","));
         });
     });
