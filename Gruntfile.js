@@ -65,7 +65,7 @@ module.exports = function (grunt) {
     grunt.registerTask("lint", ["jshint", "jscs"]);
     grunt.registerTask("markdown", "mdlint");
 
-    grunt.registerTask("default", ["lint", "test"]);
+    grunt.registerTask("default", ["test", "lint"]);
 
     grunt.loadNpmTasks("grunt-contrib-watch");
 };
