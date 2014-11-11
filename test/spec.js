@@ -30,7 +30,19 @@ describe("pretendr", function () {
             .and.to.have.property("mock");
     });
     it("returns a pretendr function when no arguments are given", function () {
-        expect(pretendr().mock).to.be.a("function");
+        var withFn = pretendr(function () {}),
+            withNoArgs = pretendr();
+
+        // eql won't work because it expects functions to be ===
+        Object.keys(withFn).forEach(function (key) {
+            expect(withFn[key].toString()).to.equal(withNoArgs[key].toString());
+        });
+    });
+    it("returns an undefined pretendr when undefined is given", function () {
+        expect(pretendr(undefined)).to.have.property("mock", undefined);
+    });
+    it("returns a null pretendr when null is given", function () {
+        expect(pretendr(null)).to.have.property("mock", null);
     });
     describe("with function", function () {
         var callback,
@@ -43,8 +55,7 @@ describe("pretendr", function () {
             p = pretendr();
         });
         it("has an empty calls array", function () {
-            expect(p.calls).to.be.an("array")
-                .and.to.have.length(0);
+            expect(p.calls).to.be.eql([]);
         });
         it("mocks its properties", function () {
             var fn = function () {},
