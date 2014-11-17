@@ -36,7 +36,6 @@
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-jscs": "^0.8.1",
-    "grunt-mdlint": "0.0.1",
     "grunt-mocha-test": "^0.10.2",
     "injectr": "^0.5.1",
     "jshint": "~2.5",

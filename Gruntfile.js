@@ -33,9 +33,6 @@ module.exports = function (grunt) {
                 config : ".jscsrc"
             }
         },
-        mdlint : {
-            files : ["*.md", "*.markdown"]
-        },
         watch : {
             lib : {
                 files : ["lib/*.js"],
@@ -44,10 +41,6 @@ module.exports = function (grunt) {
             test : {
                 files : ["test/*.js"],
                 tasks : ["test", "jshint:test", "jscs:test"]
-            },
-            markdown : {
-                files : ["*.md"],
-                tasks : ["markdown"]
             },
             grunt : {
                 files : ["Gruntfile.js"],
@@ -58,12 +51,10 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-mocha-test");
-    grunt.loadNpmTasks("grunt-mdlint");
     grunt.loadNpmTasks("grunt-jscs");
 
     grunt.registerTask("test", "mochaTest");
     grunt.registerTask("lint", ["jshint", "jscs"]);
-    grunt.registerTask("markdown", "mdlint");
 
     grunt.registerTask("default", ["test", "lint"]);
 
