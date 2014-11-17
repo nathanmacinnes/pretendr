@@ -19,10 +19,16 @@ I prefer to keep mocks to a minimum so I know exactly what my code is doing.
 
 ````javascript
 var mockFs = pretendr({
+    appendFile : function () {},
+    createReadStream : function () {},
 	readFile : function () {},
 	readFileSync : function () {}
 });
 ````
+
+Each function creates a mock function and each object creates a mock object. (As
+a shortcut, `pretendr()` creates a standalone mock function which you can use as
+a dummy callback.)
 
 `mockFs` now contains a `mock` property, which is what you pass in to your code
 for testing as a substitute for the real thing. This is virtually
@@ -52,10 +58,10 @@ assert.equal(fs.readFile.calls[0].args[1], 'f.txt');
 assert.equal(fs.appendFile.calls.length, 0);
 ````
 
-And run the callback:
+And run the callback, then test that it did what we expect:
 
 ````javascript
-assert.equal(fs.readFile.calls[0].callback());
+fs.readFile.calls[0].callback();
 assert.equal(fs.appendFile.calls.length, 1);
 ````
 
@@ -67,6 +73,21 @@ mockFs.readFileSync.fake(function () {
     // arguments and context are correctly passed to this function
     return "some text";
 });
+````
+
+Templates allow you to create a new pretendr object each time the function is
+run:
+````js
+mockFs.createReadStream.template({
+    on : function () {}
+});
+````
+
+Then retrieve your created pretendr:
+
+````js
+var mockRs = mockFs.createReadStream.calls[0].pretendr;
+assert.equal(mockRs.calls[0].args[0], "data");
 ````
 
 ## Share it ##
