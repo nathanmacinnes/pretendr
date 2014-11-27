@@ -1,6 +1,6 @@
 "use strict";
 
-var chance = require("chance"),
+var chance = require("chance-multiseed"),
     expect = require("expect.js"),
     injectr = require("injectr");
 
@@ -9,10 +9,7 @@ describe("pretendr", function () {
         generateArguments,
         pretendr;
     beforeEach(function () {
-        random = new chance.Chance(
-            // until pull request 94 gets merged on chance.js
-            this.currentTest.title.charCodeAt(5)
-        );
+        random = chance(this.currentTest.title);
         pretendr = injectr("../lib/pretendr.js");
 
         generateArguments = function () {

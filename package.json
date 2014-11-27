@@ -30,7 +30,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "chance": "^0.6.1",
+    "chance-multiseed": "^1.0.0",
     "expect.js": "0.1.0 - 0.3.x",
     "grunt": "^0.4.4",
     "grunt-contrib-jshint": "^0.10.0",
