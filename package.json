@@ -1,7 +1,7 @@
 {
   "name": "pretendr",
   "description": "Powerful JavaScript mocking",
-  "version": "v0.6.2",
+  "version": "v0.7.0",
   "author": "Nathan MacInnes <nathan@macinn.es>",
   "repository": {
     "type": "git",

@@ -90,6 +90,16 @@ var mockRs = mockFs.createReadStream.calls[0].pretendr;
 assert.equal(mockRs.calls[0].args[0], "data");
 ````
 
+If you have lots of function calls and you only want to test one of them, use
+`findCall` to find a call by it's arguments:
+
+````js
+mockFs.findCall(['somefile.txt']).callback();
+````
+
+`findCall` can also take a number for a number of arguments, or a function which
+should return true for each matching argument.
+
 ## Share it ##
 
 **pretendr** is under the [MIT License](http://www.opensource.org/licenses/MIT).
