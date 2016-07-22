@@ -16,7 +16,7 @@
       "allowUrlComments" : true,
       "allowRegex" : true
     },
-    "validateIndentation" : 4,
+    "validateIndentation" : 2,
     "validateQuoteMarks" : "\"",
     "disallowYodaConditions" : true,
     "disallowMultipleLineStrings" : true,
