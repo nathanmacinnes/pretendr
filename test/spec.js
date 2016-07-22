@@ -205,7 +205,7 @@ describe("pretendr", function () {
             });
             it("sets the asConstructor property to true", function () {
                 new p.Mock();
-                expect(p.calls[0]).to.have.property('asConstructor', true);
+                expect(p.calls[0]).to.have.property("asConstructor", true);
             });
         });
     });
