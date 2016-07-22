@@ -208,6 +208,26 @@ describe("pretendr", function () {
         expect(p.calls[0]).to.have.property("asConstructor", true);
       });
     });
+    describe("findCall method", function () {
+      it("finds the call with the matching number of arguments", function () {
+        p.mock(1, "a", true);
+        p.mock(1, "a");
+        p.mock();
+        p.mock(1);
+        expect(p.findCall(2)).to.equal(p.calls[1]);
+        expect(p.findCall(0)).to.equal(p.calls[2]);
+      });
+      it("finds the call with matching arguments", function () {
+        p.mock(1, "a", true);
+        p.mock(2, "b", false);
+        p.mock(2, "b", true);
+        expect(p.findCall([2, "b", false])).to.equal(p.calls[1]);
+      });
+      it("treats null as any value", function () {
+        p.mock(3, 4, 5);
+        expect(p.findCall([3, null, 5])).to.equal(p.calls[0]);
+      });
+    });
   });
   describe("with an object", function () {
     var descriptor,
