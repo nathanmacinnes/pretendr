@@ -199,6 +199,10 @@ describe("pretendr", function () {
                 obj = new p.Mock();
                 expect(obj).to.have.property("a", templateDescriptor.a);
             });
+            it("makes the instance equal to the call", function () {
+                new p.Mock();
+                expect(p.instances[0]).to.equal(p.calls[0]);
+            });
         });
     });
     describe("with an object", function () {
