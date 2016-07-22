@@ -210,23 +210,62 @@ describe("pretendr", function () {
     });
     describe("findCall method", function () {
       it("finds the call with the matching number of arguments", function () {
-        p.mock(1, "a", true);
-        p.mock(1, "a");
-        p.mock();
-        p.mock(1);
+        createCalls(
+          [1, "a", true],
+          [1, "a"],
+          [],
+          [1]);
         expect(p.findCall(2)).to.equal(p.calls[1]);
         expect(p.findCall(0)).to.equal(p.calls[2]);
       });
       it("finds the call with matching arguments", function () {
-        p.mock(1, "a", true);
-        p.mock(2, "b", false);
-        p.mock(2, "b", true);
+        createCalls(
+          [1, "a", true],
+          [2, "b", false],
+          [2, "b", true]);
         expect(p.findCall([2, "b", false])).to.equal(p.calls[1]);
       });
       it("treats null as any value", function () {
-        p.mock(3, 4, 5);
+        createCalls([3, 4, 5]);
         expect(p.findCall([3, null, 5])).to.equal(p.calls[0]);
       });
+      describe("with function", function () {
+        var
+          args = ["one", "two", "three", "four", "five", "six"],
+          fn;
+        beforeEach(function () {
+          var copy = Array.from(args);
+          fn = pretendr();
+          while (copy.length) {
+            createCalls(copy.splice(0, 2));
+          }
+        });
+        it("can call the function once for each arg", function () {
+          fn.fake(function (e, index, arr) {
+            return index !== arr.length - 1;
+          });
+
+          p.findCall(fn.mock);
+          expect(fn.calls).to.have.length(args.length);
+          expect(fn.calls.map(function (call) {
+            return call.args[0];
+          })).to.eql(args);
+        });
+        it("returns the call for which all arg calls return true", function () {
+          // I'd like to see you come up with a better description!
+          fn.fake(function (val) {
+            return val !== "two" && val !== "four";
+          });
+          expect(p.findCall(fn.mock)).to.equal(p.calls[2]);
+        });
+      });
+      function createCalls() {
+        Array.from(arguments).forEach(function (a) {
+          p.calls.push({
+            args : a
+          });
+        });
+      }
     });
   });
   describe("with an object", function () {
