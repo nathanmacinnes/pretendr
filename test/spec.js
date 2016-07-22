@@ -203,6 +203,10 @@ describe("pretendr", function () {
                 new p.Mock();
                 expect(p.instances[0]).to.equal(p.calls[0]);
             });
+            it("sets the asConstructor property to true", function () {
+                new p.Mock();
+                expect(p.calls[0]).to.have.property('asConstructor', true);
+            });
         });
     });
     describe("with an object", function () {
