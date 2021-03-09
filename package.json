@@ -31,15 +31,15 @@
   "dependencies": {},
   "devDependencies": {
     "chance-multiseed": "^1.0.0",
-    "expect.js": "0.1.0 - 0.3.x",
-    "grunt": "^0.4.4",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-jscs": "^0.8.1",
-    "grunt-mocha-test": "^0.10.2",
+    "expect.js": "0.3.1",
+    "grunt": "^1.3.0",
+    "grunt-contrib-jshint": "^3.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-jscs": "^3.0.1",
+    "grunt-mocha-test": "^0.13.3",
     "injectr": "^0.5.1",
-    "jshint": "~2.5",
-    "mocha": "^1.18.2"
+    "jshint": "~2.12",
+    "mocha": "^8.3.1"
   },
   "directories": {
     "lib": "./lib",

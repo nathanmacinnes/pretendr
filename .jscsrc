@@ -23,7 +23,7 @@
     "disallowMixedSpacesAndTabs" : true,
     "disallowTrailingWhitespace" : true,
     "disallowSpaceAfterPrefixUnaryOperators" : true,
-    "requireMultipleVarDecl" : true,
+    "requireMultipleVarDecl" : false,
 
     "requireSpaceAfterKeywords" : [
       "if",
@@ -56,7 +56,6 @@
     "requireSpaceAfterObjectKeys" : true,
     "disallowMultipleLineBreaks" : true,
     "disallowNewlineBeforeBlockStatements" : true,
-    "validateLineBreaks" : "LF",
     "disallowImplicitTypeConversion" : ["numeric", "boolean", "binary",
         "string"]
 }

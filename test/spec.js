@@ -1,13 +1,13 @@
 "use strict";
 
-var chance = require("chance-multiseed"),
-  expect = require("expect.js"),
-  injectr = require("injectr");
+const chance = require("chance-multiseed");
+const expect = require("expect.js");
+const injectr = require("injectr");
 
 describe("pretendr", function () {
-  var random,
-    generateArguments,
-    pretendr;
+  let random;
+  let generateArguments;
+  let pretendr;
   beforeEach(function () {
     random = chance(this.currentTest.title);
     pretendr = injectr("../lib/pretendr.js");
@@ -27,8 +27,8 @@ describe("pretendr", function () {
       .and.to.have.property("mock");
   });
   it("returns a pretendr function when no arguments are given", function () {
-    var withFn = pretendr(function () {}),
-      withNoArgs = pretendr();
+    const withFn = pretendr(function () {});
+    const withNoArgs = pretendr();
 
     // eql won't work because it expects functions to be ===
     Object.keys(withFn).forEach(function (key) {
@@ -42,21 +42,20 @@ describe("pretendr", function () {
     expect(pretendr(null)).to.have.property("mock", null);
   });
   describe("with function", function () {
-    var callback,
-      p;
+    let callback;
+    let p;
     beforeEach(function () {
 
       // dogfood
       callback = pretendr();
-
       p = pretendr();
     });
     it("has an empty calls array", function () {
       expect(p.calls).to.be.eql([]);
     });
     it("mocks its properties", function () {
-      var fn = function () {},
-        property = random.string();
+      const fn = function () {};
+      const property = random.string();
       fn[property] = function () {};
       p = pretendr(fn);
       p.mock[property]();
@@ -71,7 +70,7 @@ describe("pretendr", function () {
         expect(p.calls).to.have.length(1);
       });
       it("records the arguments to each call", function () {
-        var args = random.n(random.integer, random.natural({
+        const args = random.n(random.integer, random.natural({
           min : 1,
           max : 20
         }));
@@ -79,19 +78,19 @@ describe("pretendr", function () {
         expect(p.calls[0].args).to.eql(args);
       });
       it("records the context of each call", function () {
-        var context = {};
+        const context = {};
         p.mock.call(context);
         expect(p.calls[0]).to.have.property("context", context);
       });
       it("records the return value of fakes", function () {
-        var ret = {};
+        const ret = {};
         p.fake(callback.mock);
         callback.returnValue(ret);
         p.mock();
         expect(p.calls[0]).to.have.property("returned", ret);
       });
       it("finds the callback", function () {
-        var args = generateArguments().concat(callback.mock)
+        const args = generateArguments().concat(callback.mock)
           .concat(generateArguments());
         p.mock.apply(null, args);
         expect(p.calls[0]).to.have.property("callback", callback.mock);
@@ -99,7 +98,7 @@ describe("pretendr", function () {
     });
     describe("has a returnValue method which", function () {
       it("sets the return value", function () {
-        var v = {};
+        const v = {};
         p.returnValue(v);
         expect(p.mock()).to.equal(v);
       });
@@ -120,7 +119,7 @@ describe("pretendr", function () {
         expect(callback.calls).to.have.length(1);
       });
       it("passes arguments to the callback", function () {
-        var args = random.n(random.integer, random.natural({
+        const args = random.n(random.integer, random.natural({
           min : 1,
           max : 20
         }));
@@ -129,13 +128,13 @@ describe("pretendr", function () {
         expect(callback.calls[0].args).to.eql(args);
       });
       it("passes the context to the callback", function () {
-        var context = {};
+        const context = {};
         p.fake(callback.mock);
         p.mock.call(context);
         expect(callback.calls[0].context).to.equal(context);
       });
       it("makes the mock return the fake's return value", function () {
-        var ret = {};
+        const ret = {};
         p.fake(callback.mock);
         callback.returnValue(ret);
         expect(p.mock()).to.equal(ret);
@@ -153,29 +152,27 @@ describe("pretendr", function () {
         expect(p.mock()).to.not.equal(p.mock());
       });
       it("applies fakes appropriately", function () {
-        var res,
-          templateObj = p.template({
-            a : function () {}
-          });
+        const templateObj = p.template({
+          a : function () {}
+        });
         templateObj.a.fake(callback.mock);
-        res = p.mock();
+        const res = p.mock();
         res.a();
         res.a();
         expect(callback.calls).to.have.length(2);
       });
       it("saves the template instance", function () {
-        var res,
-          template = p.template(function () {});
-        res = p.mock();
+        const template = p.template(function () {});
+        const res = p.mock();
         expect(template.instances[0]).to.have.property("mock", res);
       });
       it("also saves the template instance to the call", function () {
-        var template = p.template(function () {});
+        const template = p.template(function () {});
         p.mock();
         expect(template.instances[0]).to.equal(p.calls[0].pretendr);
       });
       it("should be able to return the template", function () {
-        var template = p.template({});
+        const template = p.template({});
         expect(p.template()).to.equal(template);
       });
     });
@@ -187,16 +184,15 @@ describe("pretendr", function () {
         expect(new p.Mock()).to.be.a(p.Mock);
       });
       it("should save a pretendr object to instance", function () {
-        var obj = new p.Mock();
+        const obj = new p.Mock();
         expect(p.instances[0]).to.have.property("mock", obj);
       });
       it("should apply a template to the instance", function () {
-        var obj,
-          templateDescriptor = {
-            a : random.string()
-          };
+        const templateDescriptor = {
+          a : random.string()
+        };
         p.template(templateDescriptor);
-        obj = new p.Mock();
+        const obj = new p.Mock();
         expect(obj).to.have.property("a", templateDescriptor.a);
       });
       it("makes the instance equal to the call", function () {
@@ -230,11 +226,10 @@ describe("pretendr", function () {
         expect(p.findCall([3, null, 5])).to.equal(p.calls[0]);
       });
       describe("with function", function () {
-        var
-          args = ["one", "two", "three", "four", "five", "six"],
-          fn;
+        let args = ["one", "two", "three", "four", "five", "six"];
+        let fn;
         beforeEach(function () {
-          var copy = Array.from(args);
+          const copy = Array.from(args);
           fn = pretendr();
           while (copy.length) {
             createCalls(copy.splice(0, 2));
@@ -269,8 +264,8 @@ describe("pretendr", function () {
     });
   });
   describe("with an object", function () {
-    var descriptor,
-      p;
+    let descriptor;
+    let p;
     beforeEach(function () {
       descriptor = {
         stringProperty : random.string(),
@@ -308,7 +303,7 @@ describe("pretendr", function () {
         expect(p.stringProperty.gets).to.equal(0);
       });
       it("increments the gets property with each retrieve", function () {
-        var dummy = p.mock.stringProperty; // jshint ignore:line
+        const dummy = p.mock.stringProperty; // jshint ignore:line
         expect(p.stringProperty.gets).to.equal(1);
       });
       it("has an empty values array", function () {
@@ -321,7 +316,7 @@ describe("pretendr", function () {
       });
     });
     describe("with circular references", function () {
-      var descriptor;
+      let descriptor;
       beforeEach(function () {
         descriptor = {};
         descriptor.circ = descriptor;
@@ -336,8 +331,8 @@ describe("pretendr", function () {
     });
   });
   describe("with an array", function () {
-    var descriptor,
-      p;
+    let descriptor;
+    let p;
     beforeEach(function () {
       descriptor = random.n(random.string, random.natural({
         min : 1,
