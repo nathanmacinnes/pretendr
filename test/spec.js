@@ -10,8 +10,11 @@ describe("pretendr", () => {
   let pretendr;
   beforeEach(function () {
     random = chance(this.currentTest.title);
-    pretendr = injectr("../lib/pretendr.js");
-
+    pretendr = injectr("../lib/pretendr.js", {
+      util : require("util") // too complicated to mock this
+    }, {
+      console : console
+    });
     generateArguments = () => {
       return random.n(random.string, random.natural({
         min : 1,
@@ -27,7 +30,7 @@ describe("pretendr", () => {
       .and.to.have.property("mock");
   });
   it("returns a pretendr function when no arguments are given", () => {
-    const withFn = pretendr(() => {});
+    const withFn = pretendr(function () {});
     const withNoArgs = pretendr();
 
     // eql won't work because it expects functions to be ===
@@ -84,8 +87,10 @@ describe("pretendr", () => {
       });
       it("records the return value of fakes", () => {
         const ret = {};
-        p.fake(callback.mock);
-        callback.returnValue(ret);
+        p.fake(function () {
+          return ret;
+        });
+        // callback.returnValue(ret);
         p.mock();
         expect(p.calls[0]).to.have.property("returned", ret);
       });
@@ -151,14 +156,12 @@ describe("pretendr", () => {
         p.template({});
         expect(p.mock()).to.not.equal(p.mock());
       });
-      it("applies fakes appropriately", () => {
-        const templateObj = p.template({
-          a : () => {}
-        });
-        templateObj.a.fake(callback.mock);
+      it("applies fakes to the template", () => {
+        const templateObj = p.template(() => {});
+        templateObj.fake(callback.mock);
         const res = p.mock();
-        res.a();
-        res.a();
+        res();
+        res();
         expect(callback.calls).to.have.length(2);
       });
       it("saves the template instance", () => {
@@ -169,7 +172,7 @@ describe("pretendr", () => {
       it("also saves the template instance to the call", () => {
         const template = p.template(() => {});
         p.mock();
-        expect(template.instances[0]).to.equal(p.calls[0].pretendr);
+        expect(p.calls[0].instance).to.equal(template.instances[0]);
       });
       it("should be able to return the template", () => {
         const template = p.template({});
@@ -334,10 +337,7 @@ describe("pretendr", () => {
     let descriptor;
     let p;
     beforeEach(() => {
-      descriptor = random.n(random.string, random.natural({
-        min : 1,
-        max : 20
-      }));
+      descriptor = generateArguments();
       p = pretendr(descriptor);
     });
     it("has an array as the mock", () => {
@@ -347,5 +347,136 @@ describe("pretendr", () => {
       // need to use join because eql doesn't like the getters/setters
       expect(p.mock.join(",")).to.equal(descriptor.join(","));
     });
+  });
+  describe("with a promisable", () => {
+    let p;
+    let args;
+    beforeEach(() => {
+      p = pretendr(pretendr.promisable(false));
+      args = generateArguments();
+    });
+    it("returns a function as the mock", () => {
+      expect(p.mock).to.be.a("function");
+    });
+    it("creates separate instances on each call", () => {
+      expect(p.mock()).to.not.equal(p.mock());
+    });
+    it("resolves with all .then()s when asked", () => {
+      promiseSettlement("resolve", "then");
+    });
+    it("calls .then()s applied after resolving", () => {
+      const callback = pretendr();
+      const mockPromise = p.mock();
+      p.calls[0].promise.resolve(...args);
+      mockPromise.then(callback.mock);
+      expect(callback.calls).to.have.length(1);
+      expect(callback.calls[0].args).to.eql(args);
+    });
+    it("rejects with all .catch()s when asked", () => {
+      promiseSettlement("reject", "catch");
+    });
+    it("calls .catch()s applied after rejecting", () => {
+      const callback = pretendr();
+      const mockPromise = p.mock();
+      p.calls[0].promise.reject(...args);
+      mockPromise.catch(callback.mock);
+      expect(callback.calls).to.have.length(1);
+      expect(callback.calls[0].args).to.eql(args);
+    });
+    it("runs finally on .resolve()", () => {
+      const callback = pretendr();
+      p.mock().finally(callback.mock);
+      p.calls[0].promise.resolve();
+      expect(callback.calls).to.have.length(1);
+    });
+    it("runs finally without any arguments", () => {
+      const callback = pretendr();
+      p.mock().finally(callback.mock);
+      p.calls[0].promise.resolve(...args);
+      expect(callback.calls[0].args).to.have.length(0);
+    });
+    it("applies the second argument of .then() if .reject() is called",
+        () => {
+      const callback1 = pretendr();
+      const callback2 = pretendr();
+      p.mock().then(callback1.mock, callback2.mock);
+      p.calls[0].promise.reject(...args);
+      expect(callback1.calls).to.have.length(0);
+      expect(callback2.calls).to.have.length(1);
+      expect(callback2.calls[0].args).to.eql(args);
+    });
+    it("allows settlement calls to be monitored as mocks", () => {
+      const callback = pretendr();
+      p.mock().then(callback.mock);
+      const instance = p.calls[0].promise;
+      expect(instance.then).to.have.property("calls");
+      expect(instance.then.calls[0].args[0]).to.equal(callback.mock);
+      expect(instance.catch).to.have.property("calls");
+      expect(instance.finally).to.have.property("calls");
+    });
+    it("supports chaining", () => {
+      let recursion = 0;
+      testChains(p.mock().then(() => {}));
+      recursion = 0;
+      testChains(p.mock().catch(() => {}));
+      recursion = 0;
+      testChains(p.mock().finally(() => {}));
+      function testChains(promise) {
+        expect(promise).to.have.property("then")
+          .and.to.have.property("catch")
+          .and.to.have.property("finally");
+        if (recursion++ < 2) {
+          testChains(promise);
+        }
+      }
+    });
+    describe("set to async", function () {
+      let p;
+      let args;
+      let callback;
+      beforeEach(() => {
+        p = pretendr(pretendr.promisable(true));
+        args = generateArguments();
+        callback = pretendr();
+      });
+      it("resolves asynchronously", (done) => {
+        const mockPromise = p.mock();
+        p.calls[0].promise.resolve();
+        let asyncChecker = false;
+        mockPromise.then(() => {
+          expect(asyncChecker).to.equal(true);
+          done();
+        });
+        asyncChecker = true;
+      });
+      it.skip("works with async/await", async () => {
+        const mockPromise = p.mock();
+        p.calls[0].promise.resolve();
+        console.log(mockPromise.then(() => {}));
+        await mockPromise.then(callback.mock);
+        expect(callback.calls).to.have.length(1);
+      });
+    });
+    function promiseSettlement(pretendrMethod, mockPromiseMethod) {
+      const callbacks = pretendr(
+        random.n(() => {
+          return () => {};
+        }, random.natural({
+          min : 2,
+          max : 10
+        }))
+      );
+      const args = generateArguments();
+      const mockPromise = p.mock(...args);
+      const callbacksArray = Array.from(callbacks);
+      callbacksArray.forEach((callback) => {
+        mockPromise[mockPromiseMethod](callback.mock);
+      });
+      p.calls[0].promise[pretendrMethod]();
+      callbacksArray.forEach((callback) => {
+        expect(callback.calls).to.have.length(1);
+        expect(callback.calls[0].args).to.eql(args);
+      });
+    }
   });
 });

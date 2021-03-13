@@ -30,9 +30,8 @@ Each function creates a mock function and each object creates a mock object. (As
 a shortcut, `pretendr()` creates a standalone mock function which you can use as
 a dummy callback.)
 
-`mockFs` now contains a `mock` property, which is what you pass in to your code
-for testing as a substitute for the real thing. This is virtually
-indistinguishable to your code from the object you are mocking.
+`mockFs` contains a `mock` property, which is what you pass in to your code for testing as a substitute for the real thing. This is virtually indistinguishable
+to your code from the object you are mocking.
 
 ````javascript
 var fs = mockFs.mock;
