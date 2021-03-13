@@ -351,9 +351,11 @@ describe("pretendr", () => {
   describe("with a promisable", () => {
     let p;
     let args;
+    let callback;
     beforeEach(() => {
       p = pretendr(pretendr.promisable(false));
       args = generateArguments();
+      callback = pretendr();
     });
     it("returns a function as the mock", () => {
       expect(p.mock).to.be.a("function");
@@ -365,7 +367,6 @@ describe("pretendr", () => {
       promiseSettlement("resolve", "then");
     });
     it("calls .then()s applied after resolving", () => {
-      const callback = pretendr();
       const mockPromise = p.mock();
       p.calls[0].promise.resolve(...args);
       mockPromise.then(callback.mock);
@@ -376,7 +377,6 @@ describe("pretendr", () => {
       promiseSettlement("reject", "catch");
     });
     it("calls .catch()s applied after rejecting", () => {
-      const callback = pretendr();
       const mockPromise = p.mock();
       p.calls[0].promise.reject(...args);
       mockPromise.catch(callback.mock);
@@ -384,19 +384,16 @@ describe("pretendr", () => {
       expect(callback.calls[0].args).to.eql(args);
     });
     it("runs finally on .resolve()", () => {
-      const callback = pretendr();
       p.mock().finally(callback.mock);
       p.calls[0].promise.resolve();
       expect(callback.calls).to.have.length(1);
     });
     it("runs finally without any arguments", () => {
-      const callback = pretendr();
       p.mock().finally(callback.mock);
       p.calls[0].promise.resolve(...args);
       expect(callback.calls[0].args).to.have.length(0);
     });
-    it("applies the second argument of .then() if .reject() is called",
-        () => {
+    it("calls the second argument of .then() if .reject() is called", () => {
       const callback1 = pretendr();
       const callback2 = pretendr();
       p.mock().then(callback1.mock, callback2.mock);
@@ -406,7 +403,6 @@ describe("pretendr", () => {
       expect(callback2.calls[0].args).to.eql(args);
     });
     it("allows settlement calls to be monitored as mocks", () => {
-      const callback = pretendr();
       p.mock().then(callback.mock);
       const instance = p.calls[0].promise;
       expect(instance.then).to.have.property("calls");
@@ -415,20 +411,24 @@ describe("pretendr", () => {
       expect(instance.finally).to.have.property("calls");
     });
     it("supports chaining", () => {
-      let recursion = 0;
-      testChains(p.mock().then(() => {}));
-      recursion = 0;
-      testChains(p.mock().catch(() => {}));
-      recursion = 0;
-      testChains(p.mock().finally(() => {}));
-      function testChains(promise) {
-        expect(promise).to.have.property("then")
-          .and.to.have.property("catch")
-          .and.to.have.property("finally");
+      let count = 0;
+      testChains(p.mock(), 0);
+      expect(count).to.equal(13);
+      function testChains(promise, recursion) {
+        count++;
+        expect(promise).to.be.an("object");
         if (recursion++ < 2) {
-          testChains(promise);
+          testChains(promise.then(getEmptyFn()), recursion);
+          testChains(promise.catch(getEmptyFn()), recursion);
+          testChains(promise.finally(getEmptyFn()), recursion);
         }
       }
+      function getEmptyFn() {
+        return function () {};
+      }
+    });
+    it("avoids adding extraneous properties", () => {
+      expect(Object.keys(p.mock)).to.have.length(0);
     });
     describe("set to async", function () {
       let p;
@@ -449,11 +449,10 @@ describe("pretendr", () => {
         });
         asyncChecker = true;
       });
-      it.skip("works with async/await", async () => {
+      it("works with async/await", async () => {
         const mockPromise = p.mock();
-        p.calls[0].promise.resolve();
-        console.log(mockPromise.then(() => {}));
-        await mockPromise.then(callback.mock);
+        mockPromise.then(callback.mock);
+        await p.calls[0].promise.resolve();
         expect(callback.calls).to.have.length(1);
       });
     });
