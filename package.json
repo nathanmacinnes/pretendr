@@ -45,5 +45,5 @@
     "lib": "./lib",
     "test": "./test"
   },
-  "main": "lib/pretendr"
+  "main": "lib/main"
 }

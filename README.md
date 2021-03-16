@@ -26,12 +26,8 @@ var mockFs = pretendr({
 });
 ````
 
-Each function creates a mock function and each object creates a mock object. (As
-a shortcut, `pretendr()` creates a standalone mock function which you can use as
-a dummy callback.)
-
-`mockFs` contains a `mock` property, which is what you pass in to your code for testing as a substitute for the real thing. This is virtually indistinguishable
-to your code from the object you are mocking.
+Mock objects, accessed via the `mock` property (or `Mock` for classes), are indistinguishable from the real thing. All your observer properties/methods are
+on the base object.
 
 ````javascript
 var fs = mockFs.mock;
@@ -53,24 +49,26 @@ Or you can use whichever dependency injection method you're used to.
 Now let's monitor the calls:
 
 ````javascript
+assert.ok(fs.readFile.called);
 assert.equal(fs.readFile.calls[0].args[1], 'f.txt');
-assert.equal(fs.appendFile.calls.length, 0);
 ````
 
-And run the callback, then test that it did what we expect:
+Now lets run the callback, then test that it did what we expect:
 
 ````javascript
 fs.readFile.calls[0].callback();
-assert.equal(fs.appendFile.calls.length, 1);
+assert.ok(fs.appendFile.calledOnce);
 ````
 
 We can set return values:
 ````javascript
 mockFs.readFileSync.returnValue("some text");
 // or
-mockFs.readFileSync.fake(function () {
-    // arguments and context are correctly passed to this function
-    return "some text";
+mockFs.readFileSync.fake(function (filename) {
+    if (filename === "f.txt") {
+      return "some text";
+    }
+    return "other text";
 });
 ````
 
@@ -85,7 +83,7 @@ mockFs.createReadStream.template({
 Then retrieve your created pretendr:
 
 ````js
-var mockRs = mockFs.createReadStream.calls[0].pretendr;
+var mockRs = mockFs.createReadStream.calls[0].instance;
 assert.equal(mockRs.calls[0].args[0], "data");
 ````
 
