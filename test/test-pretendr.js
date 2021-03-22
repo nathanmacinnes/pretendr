@@ -186,7 +186,6 @@ describe("pretendr", () => {
     });
     it("passes the new pretendr to the next .reset() call", () => {
       p.reset();
-      console.log(resetArguments);
       expect(resetArguments[0]).to.be.a(pretendr.PretendrFunction);
     });
     it("receives a copies a recieved pretendr object", () => {
