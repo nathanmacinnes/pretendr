@@ -11,6 +11,7 @@ describe("pretendr", () => {
     pretendr = injectr("../lib/pretendr.js", {}, {});
     pretendr.PretendrFunction = function (...args) {
       dependencyArguments = args;
+      this.mock = function () {};
     };
     pretendr.PretendrPromisable = function () {};
     random = util.randomGenerator(chance(this.currentTest.title));
@@ -115,6 +116,18 @@ describe("pretendr", () => {
       });
     });
   });
+  describe("with a function with properties", () => {
+    let descriptor;
+    let p;
+    beforeEach(() => {
+      descriptor = function () {};
+      descriptor.property = random.string();
+      p = pretendr(descriptor);
+    });
+    it("mocks the property", () => {
+      expect(p.mock).to.have.property("property", descriptor.property);
+    });
+  });
   describe("with an array", () => {
     let descriptor;
     let p;
@@ -196,6 +209,16 @@ describe("pretendr", () => {
       p2.mock.a = p2.mock.b;
       p.reset(p2);
       expect(p.b).to.equal(p2.b);
+    });
+  });
+  describe(".Pretendr", () => {
+    it("can be extended", () => {
+      class AnotherPretendr extends pretendr.Pretendr {
+        constructor() {
+          super();
+        }
+      }
+      expect(new AnotherPretendr()).to.have.property("mock");
     });
   });
 });

@@ -13,12 +13,14 @@ describe("example 1: basic file system", () => {
     stat : function () {}
   });
   const mockTextDisplay = pretendr();
-
   const filename = "example.txt";
 
-  it("checks fs methods are called in the correct order", () => {
+  beforeEach(() => {
+    mockFs.reset();
+    mockTextDisplay.reset();
     example1(mockFs.mock, filename, mockTextDisplay.mock);
-
+  });
+  it("checks fs methods are called in the correct order", () => {
     expect(mockFs.stat.calledOnce).to.be.ok();
     expect(mockFs.stat.calls[0].args[0]).to.equal(filename);
 
@@ -32,7 +34,6 @@ describe("example 1: basic file system", () => {
     expect(mockFs.readFile.calls[0].args[0]).to.equal(filename);
     expect(mockFs.readFile.calls[0].args[1]).to.equal(mockTextDisplay.mock);
   });
-
   it("checks error handling", () => {
     example1(mockFs.mock, filename);
 
@@ -47,7 +48,6 @@ describe("example 1: basic file system", () => {
     expect(() => {
       mockFs.stat.calls[0].callback(fakeError);
     }).to.throwError(fakeError);
-
   });
 });
 
