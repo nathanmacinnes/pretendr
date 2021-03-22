@@ -1,25 +1,19 @@
 const chance = require("chance-multiseed");
 const expect = require("expect.js");
 const injectr = require("injectr");
+const util = require("./util.js");
 
 describe("pretendr", () => {
   let random;
-  let generateArguments;
   let pretendr;
   let dependencyArguments;
   beforeEach(function () {
-    pretendr = injectr("../lib/pretendr.js", {});
+    pretendr = injectr("../lib/pretendr.js", {}, {});
     pretendr.PretendrFunction = function (...args) {
       dependencyArguments = args;
     };
     pretendr.PretendrPromisable = function () {};
-    random = chance(this.currentTest.title);
-    generateArguments = () => {
-      return random.n(random.string, random.natural({
-        min : 1,
-        max : 20
-      }));
-    };
+    random = util.randomGenerator(chance(this.currentTest.title));
   });
   it("is a function", () => {
     expect(pretendr).to.be.a("function");
@@ -125,7 +119,7 @@ describe("pretendr", () => {
     let descriptor;
     let p;
     beforeEach(() => {
-      descriptor = generateArguments();
+      descriptor = random.arguments();
       p = pretendr(descriptor);
     });
     it("has an array as the mock", () => {
@@ -134,6 +128,75 @@ describe("pretendr", () => {
     it("resembles the descriptor", () => {
       // need to use join because eql doesn't like the getters/setters
       expect(p.mock.join(",")).to.equal(descriptor.join(","));
+    });
+  });
+  describe("with a complex array", () => {
+    let descriptor;
+    let p;
+    beforeEach(() => {
+      descriptor = [{
+        property : random.string()
+      }];
+      p = pretendr(descriptor);
+    });
+    it("pretendrs the object in the array", () => {
+      expect(p.mock[0]).to.eql(descriptor[0]).and.not.equal(descriptor[0]);
+      expect(p[0].gets).to.equal(1);
+      p.mock[0] = "";
+      expect(p[0].values).to.eql([""]);
+    });
+  });
+  describe(".reset() method", () => {
+    let descriptor;
+    let p;
+    let resetCalled = false;
+    let resetArguments = null;
+    beforeEach(() => {
+      descriptor = {
+        method : () => {},
+        stringProperty : random.string(),
+        arrayProperty : random.arguments()
+      };
+      pretendr.PretendrFunction.prototype.reset = (...args) => {
+        resetCalled = true;
+        resetArguments = args;
+      };
+      p = pretendr(descriptor);
+    });
+    it("restores the values of properties to their originals", () => {
+      const original = descriptor.stringProperty;
+      p.mock.stringProperty = "";
+      p.reset();
+      expect(p.mock.stringProperty).to.equal(original);
+    });
+    it("resets the get count of properties", () => {
+      p.mock.arrayProperty[0] = p.mock.stringProperty;
+      p.reset();
+      expect(p.stringProperty.gets).to.equal(0);
+      expect(p.arrayProperty.gets).to.equal(0);
+    });
+    it("resets the .values of properties", () => {
+      p.mock.stringProperty = "";
+      p.reset();
+      expect(p.stringProperty.values).to.eql([]);
+    });
+    it("calls .reset() on each of the properties/methods", () => {
+      p.reset();
+      expect(resetCalled).to.equal(true);
+    });
+    it("passes the new pretendr to the next .reset() call", () => {
+      p.reset();
+      console.log(resetArguments);
+      expect(resetArguments[0]).to.be.a(pretendr.PretendrFunction);
+    });
+    it("receives a copies a recieved pretendr object", () => {
+      const p2 = pretendr({
+        a : 0,
+        b : 2
+      });
+      p2.mock.a = p2.mock.b;
+      p.reset(p2);
+      expect(p.b).to.equal(p2.b);
     });
   });
 });

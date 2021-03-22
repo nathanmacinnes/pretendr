@@ -4,17 +4,24 @@ module.exports = (grunt) => {
   grunt.initConfig({
     pkg : grunt.file.readJSON("package.json"),
     mochaTest : {
-      test : {
+      spec : {
         options : {
           reporter : "spec"
         },
         src : ["test/test-*.js"]
+      },
+      examples : {
+        options : {
+          reporter : "spec"
+        },
+        src : ["examples/*.js"]
       }
     },
     jshint : {
       core : ["Gruntfile.js"],
-      test : ["test/*.js"],
+      spec : ["test/*.js", "examples/*.js"],
       lib : ["lib/*.js"],
+      examples : ["examples/*.js"],
       options : {
         jshintrc : true
       }
@@ -25,6 +32,9 @@ module.exports = (grunt) => {
       },
       test : {
         src : "test/*.js"
+      },
+      examples : {
+        src : "examples/*.js"
       },
       misc : {
         src : ["Gruntfile.js"]
@@ -38,9 +48,13 @@ module.exports = (grunt) => {
         files : ["lib/*.js"],
         tasks : ["test", "jshint:lib", "jscs:lib"]
       },
-      test : {
+      spec : {
         files : ["test/*.js"],
-        tasks : ["test", "jshint:test", "jscs:test"]
+        tasks : ["test:spec", "jshint:spec", "jscs:spec"]
+      },
+      examples : {
+        files : ["examples/*.js"],
+        tasks : ["examples"]
       },
       grunt : {
         files : ["Gruntfile.js"],
@@ -55,6 +69,10 @@ module.exports = (grunt) => {
 
   grunt.registerTask("test", "mochaTest");
   grunt.registerTask("lint", ["jshint", "jscs"]);
+  grunt.registerTask("examples",
+    ["mochaTest:examples", "jshint:examples", "jscs:examples"]);
+  grunt.registerTask("spec",
+    ["mochaTest:spec", "jshint:spec", "jscs:spec"]);
 
   grunt.registerTask("default", ["test", "lint"]);
 
